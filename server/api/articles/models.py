@@ -15,11 +15,12 @@ class Article(models.Model):
 
     id = models.AutoField(primary_key=True)
 
-    brand = models.CharField(max_length = 100, blank = False)
+    brand = models.CharField(max_length = 200, blank = False)
     
-    title = models.CharField(max_length = 100, blank = False)
+    title = models.CharField(max_length = 200, blank = False)
 
-    url = models.CharField(max_length = 200, blank = False)
+    url = models.CharField(max_length = 200, blank = False, unique = True)
+
     clustered = models.BooleanField(default = False)
     
     added = models.DateTimeField(auto_now = True)
@@ -38,24 +39,25 @@ class Article(models.Model):
         return str(self.json)
 
     #Extracts top taxonomy and labels
-    def extract_top_taxonomy(taxonomy):
+    def extract_top_taxonomy(self, taxonomy):
 
         tags = []
         firstLabel = taxonomy[0]["label"].split("/")[1:]
         tags.extend(firstLabel[1:])
         if(len(taxonomy) >= 2):
             secondLabel = taxonomy[1]["label"].split("/")[1:]
-            if(taxonomy[1]["confident"] == "yes"):
+            if("confident" in taxonomy[1]):
                 tags.extend(secondLabel)
 
 
-        _category = firstLabel[0]
-        _tags = tags
+        return firstLabel[0], tags
 
-    def save(**kwargs):
+    def __init__(self, **kwargs):
 
-        extract_top_taxonomy(kwargs["json"]["taxonomy"])
-        super.save(kwargs)
+        category, tags = self.extract_top_taxonomy(kwargs["json"]["taxonomy"])
+        kwargs["category"] = category
+        kwargs["tags"] = tags
+        super().__init__(**kwargs)
 
 
 

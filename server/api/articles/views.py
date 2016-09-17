@@ -17,9 +17,14 @@ def root(request, format=None):
 
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def collect(request, format=None):
     content = "Collected data"
+
+    d = json.loads(request.body.decode("utf-8"))
+
+    if(d["key"] != "ovojemojkompjuter!!!"):
+        return Response("Neces majci!")
 
     print("Collecting the data...")
     #sites  = ["http://www.usatoday.com/","http://www.dailymail.co.uk/home/index.html","https://www.yahoo.com/news/?ref=gs","https://www.theguardian.com/world","http://en.canoe.com/home.html","http://edition.cnn.com/WORLD/","http://www.theage.com.au/","http://www.journalgazette.net/","http://washingtonpost.com/","http://www.nytimes.com/","http://foxnews.com/","http://bbc.com/","http://www.111breakingnews.com/?f"]

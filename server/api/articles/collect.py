@@ -17,12 +17,18 @@ def scrape(news_sites=[]):
 
     return urlmap
 
+def delete_dict_key(dict,keys):
+    for key in keys:
+        del dict[key]
 
+#keys = ["status","totalTransactions","keywords","concepts","entities","usage"]
 
-def extract_sentiment(api_key="87add3c04a657951ee91eee94d11290b8a734750", sites="http://www.cnn.com/2016/09/18/realestate/so-you-think-your-place-is-small.html?hp&action=click&pgtype=Homepage&clickSource=image&module=photo-spot-region&region=top-news&WT.nav=top-news&mtrref=www.nytimes.com&gwh=689DBA02B8BA5664CCFD84935A2030C3&gwt=pay"):
+#delete_dict_key(dict_req["json"],keys)
+
+def extract_sentiment(api_key="***REMOVED***", sites="http://www.cnn.com/2016/09/18/realestate/so-you-think-your-place-is-small.html?hp&action=click&pgtype=Homepage&clickSource=image&module=photo-spot-region&region=top-news&WT.nav=top-news&mtrref=www.nytimes.com&gwh=689DBA02B8BA5664CCFD84935A2030C3&gwt=pay"):
     alchemy_language = AlchemyLanguageV1(api_key = api_key)
     response = {}
-    combined_operations = ['page-image','title', 'author', 'taxonomy', 'doc-emotion']
+    combined_operations = ['page-image','title', 'author', 'taxonomy', 'doc-emotion', 'doc-sentiment']
 
     for curr_site in sites:
         print(curr_site)
@@ -31,7 +37,12 @@ def extract_sentiment(api_key="87add3c04a657951ee91eee94d11290b8a734750", sites=
 
             curr_url = article["url"]
             print(curr_url)
+
             if curr_url=="":
+                continue
+
+            #Is it in database?
+            if(Article.objects.filter(url = curr_url).exists()):
                 continue
             try:
                 curr_response = json.dumps(
@@ -40,15 +51,18 @@ def extract_sentiment(api_key="87add3c04a657951ee91eee94d11290b8a734750", sites=
                     extract=combined_operations,
                    ),
                   indent=2)
-            except:
-                print("Excpeption")
+            except Exception as e:
+                print(e.args)
                 continue
             response_dict = json.loads(curr_response)
             
             response_dict["brand"] = curr_site
             response_dict["top_image"] = article["top_image"]
 
-            article_model = Article(title = response_dict["title"], url = response_dict["url"], brand = response_dict["brand"], json =  response_dict, clustered = False)
+            title = response_dict["title"]
+            del response_dict["title"]
+
+            article_model = Article(title = title, url = response_dict["url"], brand = response_dict["brand"], json =  response_dict, clustered = False)
             article_model.save()
 
             print("Saved model: " + str(article_model))
