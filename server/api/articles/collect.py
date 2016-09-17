@@ -3,8 +3,7 @@ from watson_developer_cloud import AlchemyLanguageV1
 import datetime
 import newspaper
 
-
-from articles.models import Article
+from .models import Article
 
 def scrape(news_sites=[]):
 
@@ -28,9 +27,9 @@ def extract_sentiment(api_key="87add3c04a657951ee91eee94d11290b8a734750", sites=
     for curr_site in sites:
         print(curr_site)
 
-        for article in sites[curr_site][:10]:
+        for article in sites[curr_site]:
 
-            curr_url = article.url
+            curr_url = article["url"]
             print(curr_url)
             if curr_url=="":
                 continue
@@ -49,20 +48,12 @@ def extract_sentiment(api_key="87add3c04a657951ee91eee94d11290b8a734750", sites=
             response_dict["brand"] = curr_site
             response_dict["top_image"] = article["top_image"]
 
-            Article.create({"title" : response_dict["title"], "url" : response_dict["url"], "brand" : response_dict["brand"], "json" : response_dict, "clustered" : False})
+            article_model = Article(title = response_dict["title"], url = response_dict["url"], brand = response_dict["brand"], json =  response_dict, clustered = False)
+            article_model.save()
+
+            print("Saved model: " + str(article_model))
 
             print(response_dict)
-
-
-
-
-            response[respones_dict["url"]] = respones_dict
-        response_brand
-
-sites  = ["http://www.usatoday.com/","http://www.dailymail.co.uk/home/index.html","https://www.yahoo.com/news/?ref=gs","https://www.theguardian.com/world","http://en.canoe.com/home.html","http://edition.cnn.com/WORLD/","http://www.theage.com.au/","http://www.journalgazette.net/","http://washingtonpost.com/","http://www.nytimes.com/","http://foxnews.com/","http://bbc.com/","http://www.111breakingnews.com/?f"]
-srcs = scrape(sites[0])
-print(srcs)
-print("*********************************************")
 
 
 

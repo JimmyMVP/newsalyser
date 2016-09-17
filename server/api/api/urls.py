@@ -19,5 +19,6 @@ from articles import views
 
 
 urlpatterns = [
-    url(r'^', views.root),
+    url(r'^root', views.root),
+    url(r'^collect', views.collect)
 ]
