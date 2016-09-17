@@ -28,8 +28,35 @@ class Article(models.Model):
 
     json = JSONField()
 
+    category = models.CharField(max_length = 50, null = True)
+
+    top_taxonomy = models.CharField(max_length = 50, null = True)
+
+    tags = ArrayField(models.CharField(max_length = 30), null = True)
+
     def __str__(self):
         return str(self.json)
+
+    #Extracts top taxonomy and labels
+    def extract_top_taxonomy(taxonomy):
+
+        tags = []
+        firstLabel = taxonomy[0]["label"].split("/")[1:]
+        tags.extend(firstLabel[1:])
+        if(len(taxonomy) >= 2):
+            secondLabel = taxonomy[1]["label"].split("/")[1:]
+            if(taxonomy[1]["confident"] == "yes"):
+                tags.extend(secondLabel)
+
+
+        _category = firstLabel[0]
+        _tags = tags
+
+    def save(**kwargs):
+
+        extract_top_taxonomy(kwargs["json"]["taxonomy"])
+        super.save(kwargs)
+
 
 
 class Cluster(models.Model):
