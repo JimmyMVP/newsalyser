@@ -22,7 +22,7 @@ def scrape(news_sites=[]):
 def extract_sentiment(api_key="87add3c04a657951ee91eee94d11290b8a734750", sites="http://www.cnn.com/2016/09/18/realestate/so-you-think-your-place-is-small.html?hp&action=click&pgtype=Homepage&clickSource=image&module=photo-spot-region&region=top-news&WT.nav=top-news&mtrref=www.nytimes.com&gwh=689DBA02B8BA5664CCFD84935A2030C3&gwt=pay"):
     alchemy_language = AlchemyLanguageV1(api_key = api_key)
     response = {}
-    combined_operations = ['page-image', 'entity', 'keyword', 'title', 'author', 'taxonomy', 'concept', 'doc-emotion']
+    combined_operations = ['page-image','title', 'author', 'taxonomy', 'doc-emotion']
 
     for curr_site in sites:
         print(curr_site)
@@ -41,7 +41,7 @@ def extract_sentiment(api_key="87add3c04a657951ee91eee94d11290b8a734750", sites=
                    ),
                   indent=2)
             except:
-                print("excpeption")
+                print("Excpeption")
                 continue
             response_dict = json.loads(curr_response)
             
