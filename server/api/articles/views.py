@@ -3,6 +3,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, renderer_classes
 from . import collect as nlp_collect
+from .models import Article
 
 
 @api_view(['GET'])
@@ -26,3 +27,14 @@ def collect(request, format=None):
     nlp_collect.extract_sentiment(sites = srcs)
 
     return Response(content)
+
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def random(request, format=None):
+
+    print("Issuing random article...")
+    articles = Article.objects.order_by("added").values()
+
+    return Response(articles[0])

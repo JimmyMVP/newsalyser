@@ -20,5 +20,6 @@ from articles import views
 
 urlpatterns = [
     url(r'^root', views.root),
-    url(r'^collect', views.collect)
+    url(r'^collect', views.collect),
+    url(r'^random_article', views.random)
 ]
