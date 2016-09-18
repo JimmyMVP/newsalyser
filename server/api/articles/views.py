@@ -17,14 +17,6 @@ def root(request, format=None):
 
 
 
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_cluster(request, format=None):
-    content = {'user_count': "hello"}
-    return Response(content)
-
-
-
 
 @api_view(['GET'])
 def collect(request, format=None):
@@ -56,7 +48,7 @@ def random(request, format=None):
 
 @api_view(['POST'])
 @renderer_classes((JSONRenderer,))
-def clusters(request, format=None):
+def get_clusters(request, format=None):
 
     print("Issuing clusters...")
 
@@ -74,6 +66,25 @@ def clusters(request, format=None):
         return Response({"empty" : True})
 
     return Response(clusters)
+
+
+@api_view(['POST'])
+@renderer_classes((JSONRenderer,))
+def get_cluster(request, format=None):
+
+    print("Issuing cluster...")
+
+    print("Request" + str(request.body))
+    attribute_preferences = json.loads(request.body.decode("utf-8"))
+
+    cluster = Cluster.objects.filter(cluster_title = attribute_preferences["title"]).first()
+    if(not "title" in attribute_preferences):
+        return Response({"Error" : "I need the title of the cluster"})
+    
+    articles = Article.objects.filter(cluster__cluster_title = attribute_preferences["title"]).values()
+
+    return Response(articles)
+
 
 
 
