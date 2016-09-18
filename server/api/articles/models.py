@@ -4,22 +4,15 @@ from django.contrib.postgres.fields import ArrayField, JSONField
 
 # Create your models here.
 
-class Sources(models.Model):
-
-    json = JSONField()
-    def __str__(self):
-        return str(self.json)
-
-
 class Article(models.Model):
 
     id = models.AutoField(primary_key=True)
 
-    brand = models.CharField(max_length = 200, blank = False)
+    brand = models.CharField(max_length = 600, blank = False)
     
-    title = models.CharField(max_length = 200, blank = False)
+    title = models.CharField(max_length = 600, blank = False)
 
-    url = models.CharField(max_length = 200, blank = False, unique = True)
+    url = models.CharField(max_length = 600, blank = False, unique = True)
 
     clustered = models.BooleanField(default = False)
     
@@ -50,12 +43,11 @@ class Article(models.Model):
                 tags.extend(secondLabel)
 
 
-        return firstLabel[0], tags
+        return tags
 
     def __init__(self, **kwargs):
 
-        category, tags = self.extract_top_taxonomy(kwargs["json"]["taxonomy"])
-        kwargs["category"] = category
+        tags = self.extract_top_taxonomy(kwargs["json"]["taxonomy"])
         kwargs["tags"] = tags
         super().__init__(**kwargs)
 
@@ -63,7 +55,9 @@ class Article(models.Model):
 
 class Cluster(models.Model):
 
-    cluster_title = models.CharField(max_length = 100, blank = True)
+    cluster_title = models.CharField(max_length = 200)
+    category = models.CharField(max_length = 50)
+
     added = models.DateTimeField(auto_now = True)
 
     def __str__(self):

@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'^collect', views.collect),
     url(r'^random_article', views.random),
     url(r'^specific_articles', views.specific),
-
+    url(r'^clusters', views.clusters),
 ]

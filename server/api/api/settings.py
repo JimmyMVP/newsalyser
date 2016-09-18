@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default' : {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'hackzurich',
+        'NAME': 'microsoftbing',
         'USER': 'hedo_mongoadmin',
         'PASSWORD': 'eeSieyah6S',
         'HOST': 'localhost',
