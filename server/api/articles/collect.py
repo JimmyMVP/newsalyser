@@ -4,6 +4,7 @@ import datetime
 import newspaper
 import requests
 import pickle
+import os
 
 
 from .models import Article, Cluster
@@ -17,7 +18,7 @@ def get_bingp():
         return b
 
 
-def get_bing(api_key = "***REMOVED***"):
+def get_bing(api_key = os.environ['BING_NEWS_API_KEY']):
 
     headers = {
     # Request headers
@@ -85,7 +86,7 @@ def analyse(json):
 
 
 
-def sentiment(api_key="***REMOVED***", site = ""):
+def sentiment(api_key=os.environ["ALCHEMY_API_KEY"], site = ""):
     alchemy_language = AlchemyLanguageV1(api_key = api_key)
     response = {}
     combined_operations = ['page-image', 'author', 'taxonomy', 'doc-emotion', 'doc-sentiment']
@@ -113,7 +114,7 @@ def sentiment(api_key="***REMOVED***", site = ""):
 
 
 
-def extract_sentiment(api_key="***REMOVED***", sites="http://www.cnn.com/2016/09/18/realestate/so-you-think-your-place-is-small.html?hp&action=click&pgtype=Homepage&clickSource=image&module=photo-spot-region&region=top-news&WT.nav=top-news&mtrref=www.nytimes.com&gwh=689DBA02B8BA5664CCFD84935A2030C3&gwt=pay"):
+def extract_sentiment(api_key=os.environ["ALCHEMY_API_KEY"], sites="http://www.cnn.com/2016/09/18/realestate/so-you-think-your-place-is-small.html?hp&action=click&pgtype=Homepage&clickSource=image&module=photo-spot-region&region=top-news&WT.nav=top-news&mtrref=www.nytimes.com&gwh=689DBA02B8BA5664CCFD84935A2030C3&gwt=pay"):
     alchemy_language = AlchemyLanguageV1(api_key = api_key)
     response = {}
     combined_operations = ['page-image', 'author', 'taxonomy', 'doc-emotion', 'doc-sentiment']

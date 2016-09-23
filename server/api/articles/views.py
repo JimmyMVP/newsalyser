@@ -58,14 +58,14 @@ def get_clusters(request, format=None):
     clusters = Cluster.objects.values()
 
     if("category" in attribute_preferences):
-        clusters = clusters.filter(cateogory = attribute_preferences["category"])
+        clusters = clusters.filter(category = attribute_preferences["category"])
     if("num" in attribute_preferences):
         clusters = clusters[:int(attribute_preferences["num"])]
     
     if len(clusters) == 0:
         return Response({"empty" : True})
 
-    return Response(clusters)
+    return Response(clusters, headers = {"Access-Control-Allow-Origin" : "*"})
 
 
 @api_view(['POST'])
@@ -76,19 +76,18 @@ def get_cluster(request, format=None):
 
     print("Request" + str(request.body))
     attribute_preferences = json.loads(request.body.decode("utf-8"))
-
+    print(attribute_preferences)
     cluster = Cluster.objects.filter(cluster_title = attribute_preferences["title"]).first()
     if(not "title" in attribute_preferences):
         return Response({"Error" : "I need the title of the cluster"})
     
     articles = Article.objects.filter(cluster__cluster_title = attribute_preferences["title"]).values()
 
-    return Response(articles)
+    return Response(articles, headers = {"Access-Control-Allow-Origin" : "*"})
 
 
 
 
-#
 @api_view(['POST'])
 @renderer_classes((JSONRenderer,))
 def specific(request, format=None):
@@ -102,12 +101,12 @@ def specific(request, format=None):
 
     if("num" in attribute_preferences):
         articles = articles[:int(attribute_preferences["num"])]
-    if("cateogory" in attribute_preferences):
-        articles = articles.filter(cateogory = attribute_preferences["category"])
+    if("category" in attribute_preferences):
+        articles = articles.filter(category = attribute_preferences["category"])
     if len(articles) == 0:
         return Response({"empty" : True})
 
-    return Response(articles)
+    return Response(articles, headers = {"Access-Control-Allow-Origin" : "*"})
 
 
 
